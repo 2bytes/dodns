@@ -18,7 +18,7 @@ const (
 
 var (
 	// https://developers.digitalocean.com/documentation/v2/#domain-records
-	validRecordJSON []byte = []byte(`
+	validRecordJSON = []byte(`
 	{
 		"id": 3352895,
 		"type": "A",
@@ -30,7 +30,7 @@ var (
 	}
 	`)
 
-	invalidRecordJSON []byte = []byte(`
+	invalidRecordJSON = []byte(`
 	{
 		"id": 3352895,
 		"name": "@",
@@ -49,7 +49,7 @@ func TestMain(m *testing.M) {
 
 func TestURLCheckIPServiceConstants(t *testing.T) {
 
-	for _, dom := range ip_check_addresses {
+	for _, dom := range ipCheckAddresses {
 		_, err := url.Parse(dom)
 		if err != nil {
 			t.Errorf("IP check site url [ %s ] could not be parsed/is invalid. Error: %v", dom, err.Error())
@@ -59,7 +59,7 @@ func TestURLCheckIPServiceConstants(t *testing.T) {
 
 func TestURLInvalidCheckIPService(t *testing.T) {
 
-	err, _ := get_ip_from("get:ip;from.invalid_site.com")
+	_, err := getIPFrom("get:ip;from.invalid_site.com")
 
 	if err == nil {
 		t.Error("An invalid IP search service passed parsing")
@@ -67,14 +67,14 @@ func TestURLInvalidCheckIPService(t *testing.T) {
 }
 
 func TestParseInputValidDomain(t *testing.T) {
-	err := check_domain_valid(validDomain)
+	err := checkDomainValid(validDomain)
 	if err != nil {
 		t.Errorf("Testing valid input domain failed: %v", err.Error())
 	}
 }
 
 func TestParseInputInvalidDomain(t *testing.T) {
-	err := check_domain_valid(invalidDomain)
+	err := checkDomainValid(invalidDomain)
 
 	if err == nil {
 		t.Error("An invalid input domain passed parsing")
@@ -82,7 +82,7 @@ func TestParseInputInvalidDomain(t *testing.T) {
 }
 
 func TestParseInputInvalidIncludesScheme(t *testing.T) {
-	err := check_domain_valid(includesScheme)
+	err := checkDomainValid(includesScheme)
 
 	if err == nil {
 		t.Error("An invalid input domain (with scheme) passed parsing")
@@ -90,7 +90,7 @@ func TestParseInputInvalidIncludesScheme(t *testing.T) {
 }
 
 func TestParseInputValidRecordValidDomain(t *testing.T) {
-	err := check_record_valid(validRecord, validDomain)
+	err := checkRecordValid(validRecord, validDomain)
 
 	if err != nil {
 		t.Errorf("Testing valid input record failed: %v", err.Error())
@@ -98,7 +98,7 @@ func TestParseInputValidRecordValidDomain(t *testing.T) {
 }
 
 func TestParseInputInvalidRecordValidDomain(t *testing.T) {
-	err := check_record_valid(invalidRecord, validDomain)
+	err := checkRecordValid(invalidRecord, validDomain)
 
 	if err == nil {
 		t.Error("An invalid record with a valid domain passed parsing")
@@ -106,7 +106,7 @@ func TestParseInputInvalidRecordValidDomain(t *testing.T) {
 }
 
 func TestParseInputValidRecordInvalidDomain(t *testing.T) {
-	err := check_record_valid(validRecord, invalidDomain)
+	err := checkRecordValid(validRecord, invalidDomain)
 
 	if err == nil {
 		t.Error("A valid record with invalid domain test passed parsing")
@@ -114,7 +114,7 @@ func TestParseInputValidRecordInvalidDomain(t *testing.T) {
 }
 
 func TestParseInputInvalidRecordInvalidDomain(t *testing.T) {
-	err := check_record_valid(invalidRecord, invalidDomain)
+	err := checkRecordValid(invalidRecord, invalidDomain)
 
 	if err == nil {
 		t.Error("An invalid record with an invalid domain test passed parsing")
@@ -122,16 +122,16 @@ func TestParseInputInvalidRecordInvalidDomain(t *testing.T) {
 }
 
 func TestParseValidDomainRecordJSON(t *testing.T) {
-	dr := new(domain_record)
+	dr := new(domainRecord)
 
 	err := json.Unmarshal(validRecordJSON, dr)
 	if err != nil {
-		t.Error("Failed to unmarshal valid JSON record; %v", err)
+		t.Errorf("Failed to unmarshal valid JSON record; %v", err)
 	}
 }
 
 func TestParseInvalidDomainRecordJSON(t *testing.T) {
-	dr := new(domain_record)
+	dr := new(domainRecord)
 
 	err := json.Unmarshal(invalidRecordJSON, dr)
 	if err == nil {

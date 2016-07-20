@@ -1,4 +1,4 @@
-# DNS updater for Digital Ocean
+# DNS updater for Digital Ocean [![Build Status](https://travis-ci.org/2bytes/dodns.svg?branch=travis-ci)](https://travis-ci.org/2bytes/dodns)
 This tool is in no way affiliated with Digital Ocean, I just happen to use Digital Ocean and have decided that it is useful for me to be able to update my DO hostnames programatically.
 
 ## Purpose
